@@ -1,4 +1,5 @@
-const inputField = document.getElementById("input-field");
+const trackInputField = document.getElementById("input-field");
+const artistInputField = document.getElementById("artist-input-field");
 const button = document.getElementById("search-button");
 const results = document.getElementById("results");
 
@@ -9,7 +10,17 @@ if (!access_token) {
   window.location.replace("/login");
 }
 
-button.addEventListener(
-  "click",
-  async () => await TracksRepository.getTracks(access_token)
-);
+async function trackListing(access_token) {
+  console.log(await TracksRepository.getTracks(access_token));
+}
+
+async function getTrack(access_token) {
+  const trackInput = trackInputField.value;
+  const aritstInput = artistInputField.value;
+
+  console.log(
+    await TracksRepository.getSingleTrack(access_token, trackInput, aritstInput)
+  );
+}
+
+button.addEventListener("click", async () => await getTrack(access_token));

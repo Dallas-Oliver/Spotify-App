@@ -2,11 +2,12 @@ const express = require("express");
 const request = require("request");
 const fetch = require("node-fetch");
 const querystring = require("querystring");
+require("dotenv").config();
 
 let app = express();
 app.use(express.static("public"));
 
-let redirect_uri = process.env.REDIRECT_URI || "http://localhost:8888/callback";
+let redirect_uri = process.env.REDIRECT_URI || "http://localhost:3000/callback";
 
 app.get("/login", function(req, res) {
   res.redirect(
@@ -22,6 +23,7 @@ app.get("/login", function(req, res) {
 
 app.get("/callback", function(req, res) {
   let code = req.query.code || null;
+
   let authOptions = {
     url: "https://accounts.spotify.com/api/token",
     form: {
@@ -59,13 +61,32 @@ app.get("/get-saved-tracks", async (req, res) => {
     options
   );
   const tracks = await tracks_req.json();
-  console.log(tracks);
 
   res.json(tracks);
 });
 
+app.get("/get-track-info/:track_name", async (req, res) => {
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${req.query.access_token}`
+    }
+  };
+
+  const track_req = await fetch(
+    `https://api.spotify.com/v1/search?q=name:${
+      req.params.track_name
+    }&type=track&limit=1`,
+    options
+  );
+  const track = await track_req.json();
+  console.log(track);
+});
+
 let port = process.env.PORT || 3000;
-console.log(
-  `Listening on port ${port}. Go /login to initiate authentication flow.`
-);
-app.listen(port);
+
+app.listen(port, () => {
+  console.log(
+    `Listening on port ${port}. Go /login to initiate authentication flow.`
+  );
+});
