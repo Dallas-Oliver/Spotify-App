@@ -1,5 +1,5 @@
-const trackInputField = document.getElementById("input-field");
-const artistInputField = document.getElementById("artist-input-field");
+const trackInputField = document.getElementById("track-name-input-field");
+const artistInputField = document.getElementById("artist-name-input-field");
 const button = document.getElementById("search-button");
 const results = document.getElementById("results");
 

@@ -65,7 +65,11 @@ app.get("/get-saved-tracks", async (req, res) => {
   res.json(tracks);
 });
 
-app.get("/get-track-info/:track_name", async (req, res) => {
+app.get("/get-track-info/:track_info", async (req, res) => {
+  console.log(req.params.track_info);
+  const trackInfo = req.params.track_info.split(",");
+  const artist_info = trackInfo[0];
+  const track_name = trackInfo[1];
   const options = {
     method: "GET",
     headers: {
@@ -74,13 +78,12 @@ app.get("/get-track-info/:track_name", async (req, res) => {
   };
 
   const track_req = await fetch(
-    `https://api.spotify.com/v1/search?q=name:${
-      req.params.track_name
-    }&type=track&limit=1`,
+    `https://api.spotify.com/v1/search?q=name:${track_name}%20artist:${artist_info}&type=track`,
     options
   );
   const track = await track_req.json();
   console.log(track);
+  res.json(track);
 });
 
 let port = process.env.PORT || 3000;
