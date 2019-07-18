@@ -78,7 +78,7 @@ app.get("/get-track-info/:track_info", async (req, res) => {
   };
 
   const track_req = await fetch(
-    `https://api.spotify.com/v1/search?q=name:${track_name}%20artist:${artist_info}&type=track`,
+    `https://api.spotify.com/v1/search?q=name:"${track_name}"%20artist:"${artist_info}"&type=track`,
     options
   );
   const track = await track_req.json();
