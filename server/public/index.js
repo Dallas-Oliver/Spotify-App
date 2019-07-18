@@ -1,4 +1,3 @@
-const trackInputField = document.getElementById("track-name-input-field");
 const artistInputField = document.getElementById("artist-name-input-field");
 const button = document.getElementById("search-button");
 const results = document.getElementById("results");
@@ -15,12 +14,9 @@ async function trackListing(access_token) {
 }
 
 async function getTrack(access_token) {
-  const trackInput = trackInputField.value;
   const aritstInput = artistInputField.value;
 
-  console.log(
-    await TracksRepository.getSingleTrack(access_token, trackInput, aritstInput)
-  );
+  console.log(await TracksRepository.getArtistName(access_token, aritstInput));
 }
 
 button.addEventListener("click", async () => await getTrack(access_token));
