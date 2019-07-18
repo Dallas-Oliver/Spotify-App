@@ -65,11 +65,11 @@ app.get("/get-saved-tracks", async (req, res) => {
   res.json(tracks);
 });
 
-app.get("/get-track-info/:track_info", async (req, res) => {
+app.get("/get-track-info/:artist", async (req, res) => {
   console.log(req.params.track_info);
-  const trackInfo = req.params.track_info.split(",");
-  const artist_info = trackInfo[0];
-  const track_name = trackInfo[1];
+  const artist_req = req.params.artist.split(",");
+  const artist_info = artist_req[0];
+
   const options = {
     method: "GET",
     headers: {
@@ -78,7 +78,7 @@ app.get("/get-track-info/:track_info", async (req, res) => {
   };
 
   const track_req = await fetch(
-    `https://api.spotify.com/v1/search?q=name:"${track_name}"%20artist:"${artist_info}"&type=track`,
+    `https://api.spotify.com/v1/search?q=artist:"${artist_info}"&type=artist`,
     options
   );
   const track = await track_req.json();
