@@ -9,10 +9,6 @@ if (!access_token) {
   window.location.replace("/login");
 }
 
-async function trackListing(access_token) {
-  console.log(await TracksRepository.getTracks(access_token));
-}
-
 async function getTrack(access_token) {
   const aritstInput = artistInputField.value;
 
