@@ -1,1 +1,1 @@
-
+This is an ongoing project to practice working with API's as well as making HTTP requests using Express. currently I am working on a feature that will make playlists for the user based on artists the user requests.
