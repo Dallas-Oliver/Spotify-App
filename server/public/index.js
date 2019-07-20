@@ -9,10 +9,20 @@ if (!access_token) {
   window.location.replace("/login");
 }
 
-async function getTrack(access_token) {
+async function getArtist(access_token) {
   const aritstInput = artistInputField.value;
+  const response = await TracksRepository.getArtistName(
+    access_token,
+    aritstInput
+  );
 
-  console.log(await TracksRepository.getArtistName(access_token, aritstInput));
+  const artistsArray = response.artists.items;
+
+  for (let item of artistsArray) {
+    if (item.name.toLowerCase() === aritstInput.toLowerCase()) {
+      console.log(item);
+    }
+  }
 }
 
-button.addEventListener("click", async () => await getTrack(access_token));
+button.addEventListener("click", async () => await getArtist(access_token));

@@ -2,8 +2,7 @@ const express = require("express");
 const request = require("request");
 const fetch = require("node-fetch");
 const querystring = require("querystring");
-const SpotifyWebApi = require("spotify-web-api-node");
-const spotify = new SpotifyWebApi();
+
 require("dotenv").config();
 
 let app = express();
@@ -45,16 +44,15 @@ app.get("/callback", function(req, res) {
     json: true
   };
   request.post(authOptions, function(error, response, body) {
-    var access_token = body.access_token;
-    spotifyWebApi.setAccessToken(body.access_token);
+    const access_token = body.access_token;
 
     res.redirect("/?access_token=" + access_token);
   });
 });
 
 app.get("/get-track-info/:artist", async (req, res) => {
-  const artist_req = req.params.artist.split(",");
-  const artist_info = artist_req[0];
+  const artist_params = req.params.artist.split(",");
+  const artist_info = artist_params[0];
 
   const options = {
     method: "GET",
@@ -63,19 +61,14 @@ app.get("/get-track-info/:artist", async (req, res) => {
     }
   };
 
-  console.log(typeof artist_info);
+  const track_req = await fetch(
+    `https://api.spotify.com/v1/search?q=artist:"${artist_info}"&type=artist`,
+    options
+  );
+  const artist = await track_req.json();
+  console.log(artist);
 
-  spotify.search(artist_info, "artist", options, (err, data) => {
-    console.log(data);
-  });
-
-  // const track_req = await fetch(
-  //   `https://api.spotify.com/v1/search?q=artist:"${artist_info}"&type=artist`,
-  //   options
-  // );
-  // const track = await track_req.json();
-  // console.log(track);
-  // res.json(track);
+  res.json(artist);
 });
 
 let port = process.env.PORT || 3000;
