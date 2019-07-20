@@ -50,6 +50,20 @@ app.get("/callback", function(req, res) {
   });
 });
 
+app.get("/get-user-id", async (req, res) => {
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${req.query.access_token}`
+    }
+  };
+
+  const user_req = await fetch("https://api.spotify.com/v1/me", options);
+  const user_object = await user_req.json();
+  console.log(user_object);
+  res.json(user_object);
+});
+
 app.get("/get-track-info/:artist", async (req, res) => {
   const artist_params = req.params.artist.split(",");
   const artist_info = artist_params[0];
@@ -66,7 +80,6 @@ app.get("/get-track-info/:artist", async (req, res) => {
     options
   );
   const artist = await track_req.json();
-  console.log(artist);
 
   res.json(artist);
 });

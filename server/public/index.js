@@ -9,6 +9,12 @@ if (!access_token) {
   window.location.replace("/login");
 }
 
+(async function getUserInfo(access_token) {
+  const response = await fetch(`/get-user-id/?access_token=${access_token}`);
+  const userObj = await response.json();
+  console.log(userObj);
+})(access_token);
+
 async function getArtist(access_token) {
   const aritstInput = artistInputField.value;
   const response = await TracksRepository.getArtistName(
@@ -19,7 +25,10 @@ async function getArtist(access_token) {
   const artistsArray = response.artists.items;
 
   for (let item of artistsArray) {
-    if (item.name.toLowerCase() === aritstInput.toLowerCase()) {
+    if (
+      item.name.toLowerCase() === aritstInput.toLowerCase() &&
+      item.genres.length > 0
+    ) {
       console.log(item);
     }
   }
