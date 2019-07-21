@@ -57,7 +57,6 @@ app.get("/get-user-id", async (req, res) => {
       Authorization: `Bearer ${req.query.access_token}`
     }
   };
-
   const user_req = await fetch("https://api.spotify.com/v1/me", options);
   const user_object = await user_req.json();
   console.log(user_object);
@@ -82,6 +81,23 @@ app.get("/get-track-info/:artist", async (req, res) => {
   const artist = await track_req.json();
 
   res.json(artist);
+});
+
+app.post("create-playlist/:user_id", async (req, res) => {
+  const user_id = req.params.user_id;
+  const options = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${req.query.access_token}`,
+      "Content-Type": "application/json"
+    }
+  };
+  const newPlaylist_req = await fetch(
+    `https://api.spotify.com/v1/users/${user_id}/playlists`,
+    options
+  );
+  const newPlaylist = await newPlaylist_req.json();
+  res.json(newPlaylist);
 });
 
 let port = process.env.PORT || 3000;

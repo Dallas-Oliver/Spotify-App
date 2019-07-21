@@ -10,8 +10,11 @@ if (!access_token) {
 }
 
 (async function getUserInfo(access_token) {
-  const response = await fetch(`/get-user-id/?access_token=${access_token}`);
-  const userObj = await response.json();
+  const user_response = await fetch(
+    `/get-user-id/?access_token=${access_token}`
+  );
+  const userObj = await user_response.json();
+
   console.log(userObj);
 })(access_token);
 
@@ -21,9 +24,7 @@ async function getArtist(access_token) {
     access_token,
     aritstInput
   );
-
   const artistsArray = response.artists.items;
-
   for (let item of artistsArray) {
     if (
       item.name.toLowerCase() === aritstInput.toLowerCase() &&
