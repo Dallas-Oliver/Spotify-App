@@ -4,35 +4,63 @@ const results = document.getElementById("results");
 
 const params = new URLSearchParams(window.location.search);
 const access_token = params.get("access_token");
+const user_id = params.get("user_id");
 
 if (!access_token) {
   window.location.replace("/login");
 }
 
-(async function getUserInfo(access_token) {
-  const user_response = await fetch(
-    `/get-user-id/?access_token=${access_token}`
-  );
-  const userObj = await user_response.json();
+async function createPlaylistHandler() {
+  const artists = artistInputField.value.split(",").map(a => a.trim());
+  // lone
+  // tycho
+  // red hot chili peppers
 
-  console.log(userObj);
-})(access_token);
-
-async function getArtist(access_token) {
-  const aritstInput = artistInputField.value;
-  const response = await TracksRepository.getArtistName(
-    access_token,
-    aritstInput
-  );
-  const artistsArray = response.artists.items;
-  for (let item of artistsArray) {
-    if (
-      item.name.toLowerCase() === aritstInput.toLowerCase() &&
-      item.genres.length > 0
-    ) {
-      console.log(item);
-    }
-  }
+  await createTopPlaylist(artists);
 }
 
-button.addEventListener("click", async () => await getArtist(access_token));
+async function getArtist(artist) {
+  const response = await ArtistRepository.getArtistName(access_token, artist);
+  const artistsArray = response.artists.items;
+
+  return artistsArray.find(
+    a => a.name.toLowerCase() === artist.toLowerCase() && a.genres.length > 0
+  );
+}
+
+async function createTopPlaylist(artist_names) {
+  const playlist = await PlaylistRepository.createPlaylist(
+    access_token,
+    artist_names
+  );
+
+  const artists = await Promise.all(
+    artist_names.map(artist_name => getArtist(artist_name))
+  );
+
+  const artist_ids = artists.map(artist => artist.id);
+
+  const top_songs_obj = await Promise.all(
+    artist_ids.map(artist_id =>
+      TracksRepository.getTopTracks(artist_id, access_token)
+    )
+  );
+
+  const top_songs = top_songs_obj.flatMap(top_song_obj => top_song_obj.tracks);
+  console.log(top_songs);
+
+  const top_songs_uris = top_songs.map(song => song.uri);
+  console.log(top_songs_uris);
+
+  await PlaylistRepository.addToPlaylist(
+    access_token,
+    playlist.id,
+    top_songs_uris
+  );
+
+  // get top 5 tracks for each artists via
+  // need artist id -> /v1/artists/{id}/top-tracks
+  // then put these in playlist
+}
+
+button.addEventListener("click", createPlaylistHandler);
