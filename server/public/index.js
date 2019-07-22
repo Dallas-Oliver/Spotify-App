@@ -15,7 +15,6 @@ async function createPlaylistHandler() {
   // lone
   // tycho
   // red hot chili peppers
-
   await createTopPlaylist(artists);
 }
 
@@ -37,21 +36,14 @@ async function createTopPlaylist(artist_names) {
   const artists = await Promise.all(
     artist_names.map(artist_name => getArtist(artist_name))
   );
-
   const artist_ids = artists.map(artist => artist.id);
-
   const top_songs_obj = await Promise.all(
     artist_ids.map(artist_id =>
       TracksRepository.getTopTracks(artist_id, access_token)
     )
   );
-
   const top_songs = top_songs_obj.flatMap(top_song_obj => top_song_obj.tracks);
-  console.log(top_songs);
-
   const top_songs_uris = top_songs.map(song => song.uri);
-  console.log(top_songs_uris);
-
   await PlaylistRepository.addToPlaylist(
     access_token,
     playlist.id,
