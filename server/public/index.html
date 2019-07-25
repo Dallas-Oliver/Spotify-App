@@ -23,13 +23,14 @@
     <div id="wrapper">
       <div id="UI">
         <h1>Create a Playlist</h1>
-        <input id="artist-name-input-field" value="chon" />
+        <input id="artist-name-input-field" value="chon" onclick="popup()" />
         <button id="search-button">create playlist</button>
       </div>
       <div id="player">
         <iframe
-          src="https://open.spotify.com/embed/album/1DFixLWuPkv3KT3TnV35m3"
+          id="iframe"
           width="300"
+          src="spotify:playlist:5mMhRtpyFn50v50u98hGvI"
           height="380"
           frameborder="0"
           allowtransparency="true"

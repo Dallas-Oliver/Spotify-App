@@ -1,6 +1,7 @@
 const artistInputField = document.getElementById("artist-name-input-field");
 const button = document.getElementById("search-button");
 const results = document.getElementById("results");
+const player = document.getElementById("player");
 
 const params = new URLSearchParams(window.location.search);
 const access_token = params.get("access_token");
@@ -9,6 +10,21 @@ const user_id = params.get("user_id");
 if (!access_token) {
   window.location.replace("/login");
 }
+
+let count = 0;
+
+function popup() {
+  if (count > 0) {
+    return;
+  } else {
+    count++;
+    alert(
+      "you can add multiple artists to the same playlist by separating them with commas!"
+    );
+  }
+}
+
+// function createEmbeddedPlayer(playlist_uri) {}
 
 async function createPlaylistHandler() {
   const artists = artistInputField.value.split(",").map(a => a.trim());
@@ -49,6 +65,8 @@ async function createTopPlaylist(artist_names) {
     playlist.id,
     top_songs_uris
   );
+
+  // createEmbeddedPlayer(playlist.uri);
 
   // get top 5 tracks for each artists via
   // need artist id -> /v1/artists/{id}/top-tracks

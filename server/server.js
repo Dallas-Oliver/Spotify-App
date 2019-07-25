@@ -122,7 +122,6 @@ function get_post_options(req, body) {
 
 app.post("/create-playlist/:user_id", async (req, res) => {
   const user_id = req.params.user_id;
-  console.log(user_id);
 
   const new_playlist_req = await fetch(
     `${baseApiUri}/users/${user_id}/playlists`,
@@ -131,13 +130,13 @@ app.post("/create-playlist/:user_id", async (req, res) => {
     })
   );
   const new_playlist = await new_playlist_req.json();
-  console.log(new_playlist);
+
   res.json(new_playlist);
 });
 
 app.post("/add-tracks-to-playlist/:playlist_id", async (req, res) => {
   const playlist_id = req.params.playlist_id;
-  console.log(req.body);
+
   const add_to_playlist_req = await fetch(
     `${baseApiUri}/playlists/${playlist_id}/tracks`,
     get_post_options(req, {
