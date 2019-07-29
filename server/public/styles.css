@@ -1,0 +1,24 @@
+#wrapper {
+  border: 1px solid black;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+
+  width: 500px;
+  height: 500px;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  padding: 35px;
+  text-align: center;
+}
+
+#UI {
+}
+
+#player {
+}

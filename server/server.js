@@ -26,6 +26,21 @@ app.get("/login", function(req, res) {
   );
 });
 
+//Get and return users id=========================
+
+async function get_user_id(access_token) {
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${access_token}`
+    }
+  };
+  const user_req = await fetch(`${baseApiUri}/me`, options);
+  const user = await user_req.json();
+  console.log(user);
+  return user.id;
+}
+
 app.get("/callback", function(req, res) {
   let code = req.query.code || null;
 
@@ -56,49 +71,7 @@ app.get("/callback", function(req, res) {
   });
 });
 
-async function get_user_id(access_token) {
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${access_token}`
-    }
-  };
-  const user_req = await fetch(`${baseApiUri}/me`, options);
-  const user = await user_req.json();
-  console.log(user);
-  return user.id;
-}
-
-app.get("/get-track-info/:artist", async (req, res) => {
-  const artist_params = req.params.artist.split(",");
-  const artist_info = artist_params[0];
-
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${req.query.access_token}`
-    }
-  };
-
-  const track_req = await fetch(
-    `${baseApiUri}/search?q=artist:"${artist_info}"&type=artist`,
-    options
-  );
-  const artist = await track_req.json();
-
-  res.json(artist);
-});
-
-app.get("/get-top-tracks/:artist_id", async (req, res) => {
-  const artist_id = req.params.artist_id;
-
-  const top_tracks_req = await fetch(
-    `${baseApiUri}/artists/${artist_id}/top-tracks?country=US`,
-    get_get_options(req)
-  );
-  const top_tracks = await top_tracks_req.json();
-  res.json(top_tracks);
-});
+//helper functions for fetch options=======================
 
 function get_get_options(req) {
   return {
@@ -119,6 +92,30 @@ function get_post_options(req, body) {
     body: JSON.stringify(body)
   };
 }
+
+app.get("/get-track-info/:artist", async (req, res) => {
+  const artist_params = req.params.artist.split(",");
+  const artist_info = artist_params[0];
+
+  const track_req = await fetch(
+    `${baseApiUri}/search?q=artist:"${artist_info}"&type=artist`,
+    get_get_options(req)
+  );
+  const artist = await track_req.json();
+
+  res.json(artist);
+});
+
+app.get("/get-top-tracks/:artist_id", async (req, res) => {
+  const artist_id = req.params.artist_id;
+
+  const top_tracks_req = await fetch(
+    `${baseApiUri}/artists/${artist_id}/top-tracks?country=US`,
+    get_get_options(req)
+  );
+  const top_tracks = await top_tracks_req.json();
+  res.json(top_tracks);
+});
 
 app.post("/create-playlist/:user_id", async (req, res) => {
   const user_id = req.params.user_id;

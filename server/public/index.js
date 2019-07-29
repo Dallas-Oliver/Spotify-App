@@ -34,15 +34,6 @@ async function createPlaylistHandler() {
   await createTopPlaylist(artists);
 }
 
-async function getArtist(artist) {
-  const response = await ArtistRepository.getArtistName(access_token, artist);
-  const artistsArray = response.artists.items;
-
-  return artistsArray.find(
-    a => a.name.toLowerCase() === artist.toLowerCase() && a.genres.length > 0
-  );
-}
-
 async function createTopPlaylist(artist_names) {
   const playlist = await PlaylistRepository.createPlaylist(
     access_token,
@@ -71,6 +62,15 @@ async function createTopPlaylist(artist_names) {
   // get top 5 tracks for each artists via
   // need artist id -> /v1/artists/{id}/top-tracks
   // then put these in playlist
+}
+
+async function getArtist(artist) {
+  const response = await ArtistRepository.getArtistName(access_token, artist);
+  const artistsArray = response.artists.items;
+
+  return artistsArray.find(
+    a => a.name.toLowerCase() === artist.toLowerCase() && a.genres.length > 0
+  );
 }
 
 button.addEventListener("click", createPlaylistHandler);
