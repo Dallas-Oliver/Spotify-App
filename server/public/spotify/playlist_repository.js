@@ -11,7 +11,6 @@ class PlaylistRepository {
       }
     );
     const playlist = await playlist_req.json();
-    console.log(playlist);
     return playlist;
   }
 

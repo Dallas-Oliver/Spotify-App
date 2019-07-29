@@ -134,7 +134,7 @@ app.post("/create-playlist/:user_id", async (req, res) => {
 app.post("/add-tracks-to-playlist/:playlist_id", async (req, res) => {
   const playlist_id = req.params.playlist_id;
 
-  const add_to_playlist_req = await fetch(
+  await fetch(
     `${baseApiUri}/playlists/${playlist_id}/tracks`,
     get_post_options(req, {
       uris: req.body.uris
